@@ -10,6 +10,20 @@ pub struct Matrix {
     values: [Complex; 9],
 }
 
+impl Matrix {
+    fn conj(self) -> Self {
+        let mut result = Matrix::default();
+
+        for row in 0..WIDTH {
+            for column in 0..WIDTH {
+                result[(row, column)] = self[(column, row)].conj();
+            }
+        }
+
+        return result;
+    }
+}
+
 impl Default for Matrix {
     fn default() -> Self {
         Self {
@@ -98,7 +112,7 @@ mod tests {
     use super::*;
 
     fn check_result(actual: &Matrix, expected: Vec<f64>) {
-        let values: Vec<f64> = actual.values.iter().map(|c| c.re).collect();
+        let values: Vec<f64> = actual.values.iter().map(|c| c.norm()).collect();
         assert_eq!(values, expected);
     }
 
@@ -133,5 +147,17 @@ mod tests {
             &c,
             vec![84.0, 90.0, 96.0, 201.0, 216.0, 231.0, 318.0, 342.0, 366.0],
         );
+    }
+
+    #[test]
+    fn it_should_conj() {
+        let mut a = Matrix::from(&[1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0, 9.0]);
+
+        check_result(&a.conj(), vec![1.0, 4.0, 7.0, 2.0, 5.0, 8.0, 3.0, 6.0, 9.0]);
+
+        a[(0, 1)] = Complex::new(1.0, 1.0);
+
+        assert_eq!(a.conj()[(1, 0)].re, 1.0);
+        assert_eq!(a.conj()[(1, 0)].im, -1.0);
     }
 }

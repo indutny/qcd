@@ -16,6 +16,10 @@ impl Complex {
         self.re * self.re + self.im * self.im
     }
 
+    pub fn norm(self: Self) -> f64 {
+        self.norm_sqr().sqrt()
+    }
+
     pub fn conj(self: Self) -> Self {
         Self {
             re: self.re,
