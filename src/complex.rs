@@ -1,9 +1,10 @@
-use std::ops::{Add, Sub, Mul, Div};
+use std::default::Default;
+use std::ops::{Add, Div, Mul, Sub};
 
 #[derive(Copy, Clone, Debug, PartialEq)]
 pub struct Complex {
-    re: f64,
-    im: f64
+    pub re: f64,
+    pub im: f64,
 }
 
 impl Complex {
@@ -16,7 +17,16 @@ impl Complex {
     }
 
     pub fn conj(self: Self) -> Self {
-        Self { re: self.re, im: -self.im }
+        Self {
+            re: self.re,
+            im: -self.im,
+        }
+    }
+}
+
+impl Default for Complex {
+    fn default() -> Self {
+        Complex { re: 0.0, im: 0.0 }
     }
 }
 
@@ -32,7 +42,7 @@ impl Add for Complex {
     fn add(self, rhs: Self) -> Self {
         Self {
             re: self.re + rhs.re,
-            im: self.im + rhs.im
+            im: self.im + rhs.im,
         }
     }
 }
@@ -43,7 +53,7 @@ impl Sub for Complex {
     fn sub(self, rhs: Self) -> Self {
         Self {
             re: self.re - rhs.re,
-            im: self.im - rhs.im
+            im: self.im - rhs.im,
         }
     }
 }
@@ -54,7 +64,7 @@ impl Mul for Complex {
     fn mul(self, rhs: Self) -> Self {
         Self {
             re: self.re * rhs.re - self.im * rhs.im,
-            im: self.re * rhs.im + self.im * rhs.re
+            im: self.re * rhs.im + self.im * rhs.re,
         }
     }
 }
@@ -66,7 +76,10 @@ impl Div for Complex {
         let n = rhs.norm_sqr();
         let result = self * rhs.conj();
 
-        Complex { re: result.re / n, im: result.im / n }
+        Complex {
+            re: result.re / n,
+            im: result.im / n,
+        }
     }
 }
 
