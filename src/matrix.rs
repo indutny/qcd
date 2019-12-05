@@ -11,7 +11,7 @@ pub struct Matrix {
 }
 
 impl Matrix {
-    fn conj(self) -> Self {
+    pub fn conj(&self) -> Self {
         let mut result = Matrix::default();
 
         for row in 0..WIDTH {
@@ -21,6 +21,20 @@ impl Matrix {
         }
 
         return result;
+    }
+
+    pub fn det(&self) -> Complex {
+        let sub1 = self[(1, 1)] * self[(2, 2)] - self[(1, 2)] * self[(2, 1)];
+        let sub2 = self[(1, 0)] * self[(2, 2)] - self[(1, 2)] * self[(2, 0)];
+        let sub3 = self[(1, 0)] * self[(2, 1)] - self[(1, 1)] * self[(2, 0)];
+
+        return self[(0, 0)] * sub1 - self[(0, 1)] * sub2 + self[(0, 2)] * sub3;
+    }
+
+    pub fn rescale(&mut self, value: f64) {
+        for i in 0..self.values.len() {
+            self.values[i] = self.values[i] * Complex::from(value);
+        }
     }
 }
 
@@ -38,6 +52,17 @@ impl From<&[f64; 9]> for Matrix {
 
         for (i, &elem) in values.iter().enumerate() {
             result.values[i] = Complex::from(elem);
+        }
+        return result;
+    }
+}
+
+impl From<&[Complex; 9]> for Matrix {
+    fn from(values: &[Complex; 9]) -> Self {
+        let mut result = Matrix::default();
+
+        for (i, &elem) in values.iter().enumerate() {
+            result.values[i] = elem;
         }
         return result;
     }
@@ -159,5 +184,15 @@ mod tests {
 
         assert_eq!(a.conj()[(1, 0)].re, 1.0);
         assert_eq!(a.conj()[(1, 0)].im, -1.0);
+    }
+
+    #[test]
+    fn it_should_det() {
+        let mut a = Matrix::from(&[1.0, 2.0, 3.0, 1.0, 3.0, 2.0, 3.0, 1.0, 2.0]);
+
+        assert_eq!(a[(1, 2)].norm(), 2.0);
+
+        assert_eq!(a.det().re, -12.0);
+        assert_eq!(a.det().im, 0.0);
     }
 }
