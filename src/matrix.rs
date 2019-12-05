@@ -14,6 +14,15 @@ pub struct Matrix {
 }
 
 impl Matrix {
+    pub fn identity() -> Self {
+        let zero = Complex::from(0.0);
+        let one = Complex::from(1.0);
+
+        Self {
+            values: [one, zero, zero, zero, one, zero, zero, zero, one],
+        }
+    }
+
     pub fn conj(&self) -> Self {
         let mut result = Self::default();
 
