@@ -30,13 +30,13 @@ impl Complex {
 
 impl Default for Complex {
     fn default() -> Self {
-        Complex { re: 0.0, im: 0.0 }
+        Self { re: 0.0, im: 0.0 }
     }
 }
 
 impl From<f64> for Complex {
     fn from(value: f64) -> Self {
-        Complex { re: value, im: 0.0 }
+        Self { re: value, im: 0.0 }
     }
 }
 
@@ -80,7 +80,7 @@ impl Div for Complex {
         let n = rhs.norm_sqr();
         let result = self * rhs.conj();
 
-        Complex {
+        Self {
             re: result.re / n,
             im: result.im / n,
         }

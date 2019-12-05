@@ -12,7 +12,7 @@ pub struct Matrix {
 
 impl Matrix {
     pub fn conj(&self) -> Self {
-        let mut result = Matrix::default();
+        let mut result = Self::default();
 
         for row in 0..WIDTH {
             for column in 0..WIDTH {
@@ -31,11 +31,13 @@ impl Matrix {
         return self[(0, 0)] * sub1 - self[(0, 1)] * sub2 + self[(0, 2)] * sub3;
     }
 
-    pub fn rescale(&mut self, value: f64) {
+    pub fn rescale(&mut self, factor: f64) {
         for i in 0..self.values.len() {
-            self.values[i] = self.values[i] * Complex::from(value);
+            self.values[i] = self.values[i] * Complex::from(factor);
         }
     }
+
+    pub fn unitarize(&mut self) {}
 }
 
 impl Default for Matrix {
@@ -48,7 +50,7 @@ impl Default for Matrix {
 
 impl From<&[f64; 9]> for Matrix {
     fn from(values: &[f64; 9]) -> Self {
-        let mut result = Matrix::default();
+        let mut result = Self::default();
 
         for (i, &elem) in values.iter().enumerate() {
             result.values[i] = Complex::from(elem);
@@ -59,7 +61,7 @@ impl From<&[f64; 9]> for Matrix {
 
 impl From<&[Complex; 9]> for Matrix {
     fn from(values: &[Complex; 9]) -> Self {
-        let mut result = Matrix::default();
+        let mut result = Self::default();
 
         for (i, &elem) in values.iter().enumerate() {
             result.values[i] = elem;
@@ -72,7 +74,7 @@ impl Add for Matrix {
     type Output = Self;
 
     fn add(self, rhs: Self) -> Self {
-        let mut result = Matrix::default();
+        let mut result = Self::default();
 
         for i in 0..result.values.len() {
             result.values[i] = self.values[i] + rhs.values[i];
@@ -85,7 +87,7 @@ impl Sub for Matrix {
     type Output = Self;
 
     fn sub(self, rhs: Self) -> Self {
-        let mut result = Matrix::default();
+        let mut result = Self::default();
 
         for i in 0..result.values.len() {
             result.values[i] = self.values[i] - rhs.values[i];
@@ -98,7 +100,7 @@ impl Mul for Matrix {
     type Output = Self;
 
     fn mul(self, rhs: Self) -> Self {
-        let mut result = Matrix::default();
+        let mut result = Self::default();
 
         for row in 0..WIDTH {
             for column in 0..WIDTH {
