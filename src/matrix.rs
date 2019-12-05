@@ -30,14 +30,6 @@ impl Matrix {
 
         return self[(0, 0)] * sub1 - self[(0, 1)] * sub2 + self[(0, 2)] * sub3;
     }
-
-    pub fn rescale(&mut self, factor: f64) {
-        for i in 0..self.values.len() {
-            self.values[i] = self.values[i] * Complex::from(factor);
-        }
-    }
-
-    pub fn unitarize(&mut self) {}
 }
 
 impl Default for Matrix {
@@ -190,7 +182,7 @@ mod tests {
 
     #[test]
     fn it_should_det() {
-        let mut a = Matrix::from(&[1.0, 2.0, 3.0, 1.0, 3.0, 2.0, 3.0, 1.0, 2.0]);
+        let a = Matrix::from(&[1.0, 2.0, 3.0, 1.0, 3.0, 2.0, 3.0, 1.0, 2.0]);
 
         assert_eq!(a[(1, 2)].norm(), 2.0);
 
