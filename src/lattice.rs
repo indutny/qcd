@@ -9,7 +9,8 @@ pub struct Lattice {
 
 impl Lattice {
     pub fn cold_with_size(size: usize) -> Self {
-        let len = size * size * size * 4;
+        // 4 dimensions, 4 directions
+        let len = size * size * size * size * 4;
         let mut links = Vec::with_capacity(len);
 
         let id = Matrix::identity();
