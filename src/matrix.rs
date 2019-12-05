@@ -2,8 +2,11 @@ use std::default::Default;
 use std::ops::{Add, Index, IndexMut, Mul, Sub};
 
 use crate::complex::*;
+use crate::cvector::*;
 
 const WIDTH: usize = 3;
+
+const EPSILON: f64 = 1e-23;
 
 #[derive(Copy, Clone, Debug, PartialEq)]
 pub struct Matrix {
@@ -29,6 +32,26 @@ impl Matrix {
         let sub3 = self[(1, 0)] * self[(2, 1)] - self[(1, 1)] * self[(2, 0)];
 
         return self[(0, 0)] * sub1 - self[(0, 1)] * sub2 + self[(0, 2)] * sub3;
+    }
+
+    pub fn unitarize(&self) -> Matrix {
+        let mut v1 = CVector::new([self[(0, 0)], self[(0, 1)], self[(0, 2)]]);
+        let mut v2 = CVector::new([self[(1, 0)], self[(1, 1)], self[(1, 2)]]);
+        let mut v3 = CVector::new([self[(2, 0)], self[(2, 1)], self[(2, 2)]]);
+
+        v1 = v1.rescale(Complex::from(1.0 / (v1.norm() + EPSILON)));
+
+        v2 = v2 - v1.rescale(CVector::dot(&v1, &v2));
+        v2 = v2.rescale(Complex::from(1.0 / (v2.norm() + EPSILON)));
+
+        v3 = v3 - v1.rescale(CVector::dot(&v1, &v3)) - v2.rescale(CVector::dot(&v2, &v3));
+        v3 = v3.rescale(Complex::from(1.0 / (v3.norm() + EPSILON)));
+
+        Self {
+            values: [
+                v1[0], v1[1], v1[2], v2[0], v2[1], v2[2], v3[0], v3[1], v3[2],
+            ],
+        }
     }
 }
 
@@ -188,5 +211,14 @@ mod tests {
 
         assert_eq!(a.det().re, -12.0);
         assert_eq!(a.det().im, 0.0);
+    }
+
+    #[test]
+    fn it_should_unitarize() {
+        let a = Matrix::from(&[2.0, 0.0, 0.0, 1.0, 1.0, 0.0, 1.0, 1.0, 1.0]);
+
+        let b = a.unitarize();
+
+        check_result(&b, vec![1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0]);
     }
 }

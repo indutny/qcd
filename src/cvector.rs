@@ -21,10 +21,12 @@ impl CVector {
         self.norm_sqr().sqrt()
     }
 
-    pub fn rescale(&mut self, factor: f64) {
+    pub fn rescale(&self, factor: Complex) -> CVector {
+        let mut result = CVector::default();
         for i in 0..self.values.len() {
-            self.values[i] = self.values[i] * Complex::from(factor);
+            result.values[i] = self.values[i] * factor;
         }
+        return result;
     }
 
     pub fn dot(lhs: &CVector, rhs: &CVector) -> Complex {
@@ -102,12 +104,12 @@ mod tests {
 
     #[test]
     fn it_should_rescale() {
-        let mut a = CVector::from(&[2.0, 3.0, 6.0]);
+        let a = CVector::from(&[2.0, 3.0, 6.0]);
 
-        a.rescale(1.0 / 7.0);
+        let b = a.rescale(Complex::from(1.0 / 7.0));
 
-        assert_eq!((a.norm() * 100.0).round() / 100.0, 1.0);
-        assert_eq!((a[0].norm() * 100.0).round() / 100.0, 0.29);
+        assert_eq!((b.norm() * 100.0).round() / 100.0, 1.0);
+        assert_eq!((b[0].norm() * 100.0).round() / 100.0, 0.29);
     }
 
     #[test]
