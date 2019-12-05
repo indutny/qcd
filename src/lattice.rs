@@ -1,29 +1,44 @@
-use crate::color::*;
 use crate::complex::*;
 use crate::matrix::*;
 
+use std::ops::Index;
+
 pub struct Lattice {
-    color: Color,
-    links: Vec<Matrix>,
+    size: usize,
+    links: Vec<[Matrix; 4]>,
 }
 
 impl Lattice {
     pub fn cold_with_size(size: usize) -> Self {
-        // 4 dimensions, 4 directions
-        let len = size * size * size * size * 4;
+        // 4 dimensions
+        let len = size * size * size * size;
         let mut links = Vec::with_capacity(len);
 
         let id = Matrix::identity();
         for i in 0..len {
-            links.push(id);
+            links.push([id; 4]);
         }
 
-        Self {
-            color: Color::default(),
-            links,
+        Self { size, links }
+    }
+
+    pub fn sweep<F>(&mut self, mut func: F)
+    where
+        F: FnMut(&mut Matrix, &[Matrix; 6]),
+    {
+        for i in 0..self.links.len() {
+            let staples = self.compute_staples(i);
+
+            func(&mut self.links[i][0], &staples);
         }
     }
+
+    pub fn compute_staples(&self, i: usize) -> [Matrix; 6] {
+        [Matrix::identity(); 6]
+    }
 }
+
+type Coordinate = (usize, usize, usize, usize);
 
 #[cfg(test)]
 mod tests {
