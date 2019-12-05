@@ -31,6 +31,6 @@ mod tests {
 
     #[test]
     fn it_should_init() {
-        let lattice = Lattice::cold_with_size(32);
+        let lattice = Lattice::cold_with_size(8);
     }
 }
