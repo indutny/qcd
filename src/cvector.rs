@@ -131,4 +131,26 @@ mod tests {
         assert_eq!(CVector::dot(&b, &a).re, 4.0);
         assert_eq!(CVector::dot(&b, &a).im, 1.0);
     }
+
+    #[test]
+    fn it_should_add() {
+        let a = CVector::from(&[1.0, 2.0, 3.0]);
+        let b = CVector::from(&[4.0, 5.0, 6.0]);
+
+        let c = a + b;
+        assert_eq!(c[0].re, 5.0);
+        assert_eq!(c[1].re, 7.0);
+        assert_eq!(c[2].re, 9.0);
+    }
+
+    #[test]
+    fn it_should_sub() {
+        let a = CVector::from(&[1.0, 2.0, 3.0]);
+        let b = CVector::from(&[6.0, 5.0, 4.0]);
+
+        let c = a - b;
+        assert_eq!(c[0].re, -5.0);
+        assert_eq!(c[1].re, -3.0);
+        assert_eq!(c[2].re, -1.0);
+    }
 }
